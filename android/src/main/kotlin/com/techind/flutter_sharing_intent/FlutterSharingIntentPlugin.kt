@@ -227,14 +227,14 @@ class FlutterSharingIntentPlugin: FlutterPlugin, ActivityAware, MethodCallHandle
         }
         val path = uri?.let{ MyFileDirectory.getAbsolutePath(applicationContext, it) }
         if (path != null) {
-          val type = path?.let { getMediaType(it) }
-          val thumbnail = path?.let { getThumbnail(it, type) }
+          val type = getMediaType(path)
+          val thumbnail = getThumbnail(path, type)
           val duration = getDuration(path, type)
 
           JSONArray().put(
             JSONObject()
               .put("value", path)
-              .put("type", type.ordinal as Int)
+               .put("type", type.ordinal)
               .apply { thumbnail?.let { put("thumbnail", it) } }
               .apply { duration?.let { put("duration", it) } }
           )
@@ -250,12 +250,12 @@ class FlutterSharingIntentPlugin: FlutterPlugin, ActivityAware, MethodCallHandle
         val value = uris?.mapNotNull { uri ->
           val path = MyFileDirectory.getAbsolutePath(applicationContext, uri)
             ?: return@mapNotNull null
-          val type = path?.let { getMediaType(it) }
-          val thumbnail = path?.let { getThumbnail(it, type) }
+          val type = getMediaType(path)
+          val thumbnail = getThumbnail(path, type)
           val duration = getDuration(path, type)
           return@mapNotNull JSONObject()
             .put("value", path)
-            .put("type", type.ordinal as Int)
+            .put("type", type.ordinal)
             .apply { thumbnail?.let { put("thumbnail", it) } }
             .apply { duration?.let { put("duration", it) } }
         }?.toList()
